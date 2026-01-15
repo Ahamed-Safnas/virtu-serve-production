@@ -4,7 +4,7 @@ import Website from './components/Website';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboardWrapper from './components/AdminDashboardWrapper';
 import { supabaseOperations } from './lib/supabaseOperations';
-// import { initialServices, initialContactInfo, initialTestimonials } from './data/initialData';
+import { initialServices, initialContactInfo, initialTestimonials } from './data/initialData';
 import { Service, ContactInfo, Testimonial } from './types';
 
 function App() {

@@ -90,24 +90,33 @@
 
 // export default App;
 
-
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Website from './components/Website';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboardWrapper from './components/AdminDashboardWrapper';
 import { supabaseOperations } from './lib/supabaseOperations';
-import { initialServices, initialContactInfo, initialTestimonials } from './data/initialData';
+import {
+  initialServices,
+  initialContactInfo,
+  initialTestimonials
+} from './data/initialData';
 import { Service, ContactInfo, Testimonial } from './types';
 
 function App() {
-  // Use initialData as the starting state so the UI is never empty
+
+  // 🔹 CHANGE 1: Initialize state with initialData (NOT empty arrays)
   const [services, setServices] = useState<Service[]>(initialServices);
   const [contactInfo, setContactInfo] = useState<ContactInfo>(initialContactInfo);
   const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials);
+
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
+  // 🔹 CHANGE 2: Remove blocking loading logic
+  // No isLoading state needed anymore
+
   useEffect(() => {
+    // 🔹 CHANGE 3: Fetch Supabase data AFTER first render
     loadWebsiteData();
   }, []);
 
@@ -119,13 +128,14 @@ function App() {
         supabaseOperations.fetchTestimonials(),
       ]);
 
-      // Only update if data is successfully returned from Supabase
-      if (servicesData && servicesData.length > 0) setServices(servicesData);
+      // 🔹 CHANGE 4: Replace initial data with Supabase data when ready
+      if (servicesData?.length) setServices(servicesData);
       if (contactData) setContactInfo(contactData);
-      if (testimonialsData && testimonialsData.length > 0) setTestimonials(testimonialsData);
+      if (testimonialsData?.length) setTestimonials(testimonialsData);
+
     } catch (err) {
-      console.error('Error loading website data from Supabase:', err);
-      // Fallback is already handled because we initialized state with initialData
+      console.error('Supabase fetch failed. Using initial data.', err);
+      // Fail silently — initial data already rendered
     }
   };
 
